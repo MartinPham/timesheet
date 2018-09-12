@@ -1,0 +1,47 @@
+<md-input-container class="full-width">
+  <input mdInput placeholder="Add Task.." [mdAutocomplete]="auto" (keyup)="addTaskInput_Keypress($event)">
+</md-input-container>
+
+<md-autocomplete #auto="mdAutocomplete">
+  <md-option *ngFor="let task of suggestTasks" [value]="task.name">
+    {{ task.name }}
+  </md-option>
+</md-autocomplete>
+
+<md-list>
+  <md-list-item *ngFor="let task of tasks | sameStartedAt: calendarDate">
+    <md-icon md-list-icon *ngIf="task.id != currentTaskId">list</md-icon>
+    <md-icon md-list-icon *ngIf="task.id == currentTaskId">pets</md-icon>
+    <h4 md-line *ngIf="task.id != currentEditTaskId">{{ task.name }}</h4>
+    <h4 md-line *ngIf="task.id == currentEditTaskId"><input mdInput placeholder="Task's name" value="{{ currentEditTask.name }}"  (keyup)="editTaskNameInput_Keypress($event)"></h4>
+    <p md-line *ngIf="task.id != currentEditTaskId"> {{ task.startedAt | date: 'shortTime' }} </p>
+    <p md-line *ngIf="task.id == currentEditTaskId"><input mdInput placeholder="Task started at" value="{{ currentEditTask.startedAt }}"  (keyup)="editTaskStartedAtInput_Keypress($event)"></p>
+    <p md-line *ngIf="task.id != currentEditTaskId"> {{ task.total | secondsToTime }} </p>
+    <p md-line *ngIf="task.id == currentEditTaskId"><input mdInput placeholder="Task's total minutes" value="{{ currentEditTask.total }}"  (keyup)="editTaskTotalInput_Keypress($event)"></p>
+    <button md-raised-button *ngIf="task.id != currentTaskId" (click)="startTrackTaskButton_Click(task.id)">Start</button>
+    <button md-raised-button *ngIf="task.id == currentTaskId" (click)="stopTrackTaskButton_Click(task.id)">Stop</button>
+    <button md-raised-button *ngIf="task.id != currentEditTaskId" (click)="editTaskButton_Click(task.id)">Edit</button>
+    <button md-raised-button *ngIf="task.id == currentEditTaskId" (click)="saveTaskButton_Click()">Save</button>
+    <button md-raised-button (click)="deleteTaskButton_Click(task.id)">Delete</button>
+  </md-list-item>
+</md-list>
+
+<!--<md-toolbar>
+  <md-select [(ngModel)]="calendarMonth" (change)="monthSelect_Change()">
+    <md-option *ngFor="let month of months" [value]="month.id">
+      {{ month.name }}
+    </md-option>
+  </md-select>
+  <md-select [(ngModel)]="calendarYear" (change)="yearSelect_Change()">
+    <md-option *ngFor="let year of years" [value]="year">
+      {{ year }}
+    </md-option>
+  </md-select>
+</md-toolbar>-->
+
+<mwl-calendar-month-view #calendar [viewDate]="calendarDate" (dayClicked)="calendarDate = $event.day.date" [dayModifier]="highlightCurrentDate">
+</mwl-calendar-month-view>
+
+<br/>
+
+
